@@ -1,0 +1,4 @@
+*.pyc
+word2vec.egg-info
+.idea
+__pycache__/
