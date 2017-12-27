@@ -1,7 +1,6 @@
 import numpy as np
 from .utils import *
-#from utils import *
-import sys
+
 
 class Word2Vec:
     """
@@ -67,7 +66,7 @@ class Word2Vec:
         return new_W1, new_W2, loss
 
     def run(self):
-        if len(self.corpus)==0:
+        if len(self.corpus) == 0:
             raise ValueError('You need to specify a corpus of text.')
 
         corpus_tokenized, V = tokenize(self.corpus)
@@ -81,8 +80,3 @@ class Word2Vec:
             loss_vs_epoch.append(loss)
 
         return W1, W2, loss_vs_epoch
-
-
-# cbow = Word2Vec(method="cbow", corpus="I like playing football with my friends", n_epochs=1, learning_rate=0.8)
-# W1, W2, loss_vs_epoch = cbow.run()
-# print(W1, W2, loss_vs_epoch)

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from word2vec.word2vec import Word2Vec
+from word2veclite.word2veclite import Word2Vec
 import numpy as np
 import tensorflow as tf
 

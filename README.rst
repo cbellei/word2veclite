@@ -1,20 +1,16 @@
 .. highlight:: rst
 
 ^^^^^^^^^^^^
-aByes
+Word2VecLite
 ^^^^^^^^^^^^
-aByes is a Python package for Bayesian A/B Testing, which supports two main decision rules:
-
-* Region Of Practical Equivalence (as in the paper `Bayesian estimation supersedes the t-test <http://www.indiana.edu/~kruschke/articles/Kruschke2013JEPG.pdf>`__, J. K. Kruschke, Journal of Experimental Psychology, 2012)
-* Expected Loss (as discussed in `Bayesian A/B Testing at VWO <https://cdn2.hubspot.net/hubfs/310840/VWO_SmartStats_technical_whitepaper.pdf>`__, C. Stucchio)
-
-A lot of the underlying theory is discussed in `this blog post <http://www.claudiobellei.com/2017/11/02/bayesian-AB-testing/>`__.
+Word2VecLite is a Python implementation of Word2Vec that makes it easy to understand how Word2Vec works.
+This package is intended to be used in conjunction with `this blog post <http://www.claudiobellei.com/2017/11/02/backprop-word2vec/>`__.
 
 Installation
 ============
 * In your target folder, clone the repository with the command::
 
-        git clone https://github.com/cbellei/abyes.git
+        git clone https://github.com/cbellei/word2veclite.git
 
 * Then, inside the same folder (as always, it is advisable to use a virtual environment)::
 
@@ -22,65 +18,59 @@ Installation
 
 * To check that the package has been installed, in the Python shell type::
 
-        import abyes
+        import word2veclite
 
 * If everything works correctly, the package will be imported without errors.
 
 Dependencies
 ============
-* aByes is tested on Python 3.5 and depends on NumPy, Scipy, Matplotlib, Pymc3 (see ``requirements.txt`` for version
-information).
+* Word2VecLite is tested on Python 3.6 and depends on NumPy, Keras (see ``requirements.txt`` for version
+information). The unit tests in test/test_word2veclite.py depend on Tensorflow.
 
-How to use aByes
-================
-The main steps to run the analysis of an A/B experiment are:
+How to use Word2VecLite
+=======================
+**Input**. You need to:
+1. Define a corpus of text (the vocabulary will be built from it)
+2. Define which method you want to use: `cbow` or `skipgram`
+3. Decide how many nodes should make the hidden layer
+4. Define the size of the context window around the center word
+5. Define learning rate
+6. Decide how many epochs you want to train the neural network for
 
-* Aggregate the data for the "A" and "B" variations in a List of numpy arrays
-* Decide how to do the analysis. Options are: 1. analytic solution; 2. MCMC solution (using PyMC3); 3. compare the analytic and MCMC solutions
-* Set decision rule. Options are: 1. ROPE method; 2. Expected Loss method
-* Set parameter to use for the decision. Options are: 1. Lift (difference in means); 2. Effect size
-
-These and many more examples and instructions can be found in this blogpost.
+**Output**. Word2VecLite outputs the embeddings W1 and W2 of the neural network and the history of the loss vs. epochs.
 
 Example
 =======
 * In IPython, type::
 
-    import abyes as ab
-    import numpy as np
+    from word2veclite import Word2Vec
 
-    data = [np.random.binomial(1, 0.4, size=10000), np.random.binomial(1, 0.5, size=10000)]
-    exp = ab.AbExp(method='analytic', decision_var = 'lift', rule='rope', rope=(-0.01,0.01), plot=True)
-    exp.experiment(data)
+    corpus = "I like playing football with my friends"
+    cbow = Word2Vec(method="cbow", corpus=corpus,
+                    window_size=1, n_hidden=2,
+                    n_epochs=10, learning_rate=0.8)
+    W1, W2, loss_vs_epoch = cbow.run()
 
-* This will plot the posterior distribution:
+    print(W1)
+    #[[ 0.99870389  0.20697257]
+    # [-1.01911559  2.26364436]
+    # [-0.69737232  0.14131477]
+    # [ 3.28315183  1.13801973]
+    # [-1.42944927 -0.62142097]
+    # [ 0.65359329 -2.21415048]
+    # [-0.22343751 -1.17927987]]
 
-   .. image:: https://raw.githubusercontent.com/cbellei/abyes/master/abyes/examples/example.png
+    print(W2)
+    #[[-0.97080793  1.21120331  2.15603796 -1.79083151  3.38445043 -1.65295511
+    #   1.36685097]
+    # [2.77323464  0.78710269  2.74152617  0.08953005  0.04400675 -1.34149651
+    #   -2.19375528]]
 
-* It will then give the following result::
-
-    *** abyes ***
-
-    Method = analytic
-    Decision Rule = rope
-    Alpha = 0.95
-    Rope = (-0.01, 0.01)
-    Decision Variable = lift
-
-    Result is conclusive: B variant is winner!
-
-* There are many more examples available in the file ``example.py``, which can be run from the root directory with the command::
-
-    python abyes/examples/examples.py
-
-Limitations
-===========
-Currently, aByes:
-
-* only focuses on conversion rate experiments
-* allows for only two variants at a time to be tested
-
-These shortcomings may be improved in future versions of aByes. (Feel free to fork the project and make these improvements yourself!)
+    print(loss_vs_epoch)
+    #[14.328868654443703, 12.290456644464603, 10.366644621637064,
+    # 9.1759777684446622, 8.4233626997233895, 7.3952948684910256,
+    # 6.1727393307549736, 5.1639476117698191, 4.6333377088153043,
+    # 4.2944697259465485]
 
 Licence
 =======

@@ -1,4 +1,4 @@
 *.pyc
-word2vec.egg-info
+word2veclite.egg-info
 .idea
 __pycache__/
