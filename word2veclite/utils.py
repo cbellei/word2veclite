@@ -4,6 +4,12 @@ import numpy as np
 
 
 def tokenize(corpus):
+    """
+    Tokenize the corpus of text.
+    :param corpus: list containing a string of text (example: ["I like playing football with my friends"])
+    :return corpus_tokenized: indexed list of words in the corpus, in the same order as the original corpus (the example above would return [[1, 2, 3, 4]])
+    :return V: size of vocabulary
+    """
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(corpus)
     corpus_tokenized = tokenizer.texts_to_sequences(corpus)
@@ -12,6 +18,12 @@ def tokenize(corpus):
 
 
 def initialize(V, N):
+    """
+    Initialize the weights of the neural network.
+    :param V: size of the vocabulary
+    :param N: size of the hidden layer
+    :return: weights W1, W2
+    """
     np.random.seed(100)
     W1 = np.random.rand(V, N)
     W2 = np.random.rand(N,V)
