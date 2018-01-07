@@ -83,6 +83,17 @@ class Word2Vec:
 
         return new_W1, new_W2, loss
 
+    def predict(self, x, W1, W2):
+        """Predict output from input data and weights
+        :param x: input data
+        :param W1: weights from input to hidden layer
+        :param W2: weights from hidden layer to output layer
+        :return: output of neural network
+        """
+        h = np.mean([np.dot(W1.T, xx) for xx in x], axis=0)
+        u = np.dot(W2.T, h)
+        return softmax(u)
+
     def run(self):
         """
         Main method of the Word2Vec class.
@@ -97,8 +108,8 @@ class Word2Vec:
         loss_vs_epoch = []
         for e in range(self.n_epochs):
             loss = 0.
-            for context, label in corpus2io(corpus_tokenized, V, self.window):
-                W1, W2, loss = self.method(context, label, W1, W2, loss)
+            for context, center in corpus2io(corpus_tokenized, V, self.window):
+                W1, W2, loss = self.method(context, center, W1, W2, loss)
             loss_vs_epoch.append(loss)
 
         return W1, W2, loss_vs_epoch
