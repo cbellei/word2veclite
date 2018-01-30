@@ -43,13 +43,14 @@ class Word2Vec:
         :param loss: float that represents the current value of the loss function
         :return: updated weights and loss
         """
-        h = np.mean([np.dot(W1.T, x) for x in context], axis=0)
+        x = np.mean(context, axis=0)
+        h = np.dot(W1.T, x)
         u = np.dot(W2.T, h)
         y_pred = softmax(u)
 
         e = -label + y_pred
         dW2 = np.outer(h, e)
-        dW1 = np.mean([np.outer(x, np.dot(W2, e)) for x in context], axis=0)
+        dW1 = np.outer(x, np.dot(W2, e))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
