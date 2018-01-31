@@ -63,7 +63,7 @@ class Word2Vec:
         """
         Implementation of Skip-Gram Word2Vec model
         :param context: all the context words (these represent the labels)
-        :param label: the center word (this represents the input)
+        :param x: the center word (this represents the input)
         :param W1: weights from the input to the hidden layer
         :param W2: weights from the hidden to the output layer
         :param loss: float that represents the current value of the loss function
@@ -80,7 +80,7 @@ class Word2Vec:
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
 
-        loss += -np.sum([u[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
+        loss += -2*np.log(len(context)) - np.sum([u[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
 
         return new_W1, new_W2, loss
 
