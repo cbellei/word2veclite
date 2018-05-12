@@ -75,12 +75,12 @@ class Word2Vec:
 
         e = np.array([-label + y_pred.T for label in context])
         dW2 = np.outer(h, np.sum(e, axis=0))
-        dW1 = np.outer(x, np.dot(W2, np.sum(e, axis=0).T))
+        dW1 = np.outer(x, np.dot(W2, np.sum(e, axis=0)))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
 
-        loss += -2*np.log(len(context)) - np.sum([u[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
+        loss += - np.sum([u[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
 
         return new_W1, new_W2, loss
 
