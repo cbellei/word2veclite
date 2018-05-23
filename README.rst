@@ -4,7 +4,7 @@
 Word2VecLite
 ^^^^^^^^^^^^
 Word2VecLite is a Python implementation of Word2Vec that makes it easy to understand how Word2Vec works.
-This package is intended to be used in conjunction with `this blog post <http://www.claudiobellei.com/2017/11/02/backprop-word2vec/>`__.
+This package is intended to be used in conjunction with `this blog post <http://www.claudiobellei.com/2018/01/07/backprop-word2vec-python/>`__.
 
 Installation
 ============

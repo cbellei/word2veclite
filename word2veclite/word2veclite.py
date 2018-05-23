@@ -43,13 +43,14 @@ class Word2Vec:
         :param loss: float that represents the current value of the loss function
         :return: updated weights and loss
         """
-        h = np.mean([np.dot(W1.T, x) for x in context], axis=0)
+        x = np.mean(context, axis=0)
+        h = np.dot(W1.T, x)
         u = np.dot(W2.T, h)
         y_pred = softmax(u)
 
         e = -label + y_pred
         dW2 = np.outer(h, e)
-        dW1 = np.mean([np.outer(x, np.dot(W2, e)) for x in context], axis=0)
+        dW1 = np.outer(x, np.dot(W2, e))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
@@ -62,7 +63,7 @@ class Word2Vec:
         """
         Implementation of Skip-Gram Word2Vec model
         :param context: all the context words (these represent the labels)
-        :param label: the center word (this represents the input)
+        :param x: the center word (this represents the input)
         :param W1: weights from the input to the hidden layer
         :param W2: weights from the hidden to the output layer
         :param loss: float that represents the current value of the loss function
@@ -74,12 +75,12 @@ class Word2Vec:
 
         e = np.array([-label + y_pred.T for label in context])
         dW2 = np.outer(h, np.sum(e, axis=0))
-        dW1 = np.outer(x, np.dot(W2, np.sum(e, axis=0).T))
+        dW1 = np.outer(x, np.dot(W2, np.sum(e, axis=0)))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
 
-        loss += -np.sum([u[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
+        loss += - np.sum([u[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
 
         return new_W1, new_W2, loss
 
