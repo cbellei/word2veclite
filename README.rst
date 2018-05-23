@@ -16,6 +16,13 @@ Installation
 
         pip install .
 
+NOTE: if you get a `ModuleNotFoundError: No module named 'setuptools.wheel'` error, you may need to update
+pip and setuptools via the command `pip install -U pip setuptools`
+
+* Make sure you install the correct dependencies by typing `pip install -r requirements.txt`
+
+NOTE: this should work on both a conda environment and a standard virtual environment
+
 * To check that the package has been installed, in the Python shell type::
 
         import word2veclite
