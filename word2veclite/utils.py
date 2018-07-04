@@ -50,7 +50,6 @@ def corpus2io(corpus_tokenized, V, window_size):
             center.append(word-1)
             x = np_utils.to_categorical(contexts, V)
             y = np_utils.to_categorical(center, V)
-#            print(x,x.shape,y.ravel(),y.ravel().shape)
             yield (np.matrix(x), np.matrix(y.ravel()))
 
 
