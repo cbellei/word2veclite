@@ -43,19 +43,21 @@ class Word2Vec:
         :param loss: float that represents the current value of the loss function
         :return: updated weights and loss
         """
+
         x = np.mean(context, axis=0)
-        h = np.dot(W1.T, x)
-        u = np.dot(W2.T, h)
+        h = np.matmul(W1.T, x.T)
+        u = np.matmul(W2.T, h)
         y_pred = softmax(u)
 
-        e = -label + y_pred
+        e = -label.T + y_pred
+
         dW2 = np.outer(h, e)
         dW1 = np.outer(x, np.dot(W2, e))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
 
-        loss += -float(u[label == 1]) + np.log(np.sum(np.exp(u)))
+        loss += -float(u.T[label == 1]) + np.log(np.sum(np.exp(u)))
 
         return new_W1, new_W2, loss
 
@@ -69,18 +71,19 @@ class Word2Vec:
         :param loss: float that represents the current value of the loss function
         :return: updated weights and loss
         """
-        h = np.dot(W1.T, x)
-        u = np.dot(W2.T, h)
+
+        h = np.matmul(W1.T, x.T)
+        u = np.matmul(W2.T, h)
         y_pred = softmax(u)
 
-        e = np.array([-label + y_pred.T for label in context])
+        e = np.array([-label + y_pred.T for label in context][0])
         dW2 = np.outer(h, np.sum(e, axis=0))
-        dW1 = np.outer(x, np.dot(W2, np.sum(e, axis=0)))
+        dW1 = np.outer(x, np.matmul(W2, np.sum(e, axis=0)))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
 
-        loss += - np.sum([u[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
+        loss += - np.sum([u.T[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
 
         return new_W1, new_W2, loss
 
@@ -91,7 +94,7 @@ class Word2Vec:
         :param W2: weights from hidden layer to output layer
         :return: output of neural network
         """
-        h = np.mean([np.dot(W1.T, xx) for xx in x], axis=0)
+        h = np.mean([np.matmul(W1.T, xx) for xx in x], axis=0)
         u = np.dot(W2.T, h)
         return softmax(u)
 

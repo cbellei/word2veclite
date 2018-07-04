@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 from word2veclite.word2veclite import Word2Vec
 import numpy as np

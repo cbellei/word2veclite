@@ -2,3 +2,5 @@
 word2veclite.egg-info
 .idea
 __pycache__/
+*~
+\#*
