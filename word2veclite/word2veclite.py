@@ -112,7 +112,7 @@ class Word2Vec:
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
 
-        loss += - np.sum([u.T[label == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
+        loss += - np.sum([u[label.T == 1] for label in context]) + len(context) * np.log(np.sum(np.exp(u)))
 
         return new_W1, new_W2, loss
 

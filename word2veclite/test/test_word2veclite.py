@@ -12,9 +12,9 @@ class TestFunctions(TestCase):
     W2 = np.array([[0.2, 0.2, 0.3, 0.4, 0.5, 0.3, 0.2],
                    [0.3, 0., 0.1, 0., 1., 0.1, 0.5]])
     V, N = W1.shape
-    context_words = np.array([[1, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0],
+    context_words = np.matrix([[1, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0],
                               [0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0]])
-    center_word = np.array([0., 0., 1., 0., 0., 0., 0.])
+    center_word = np.matrix([0., 0., 1., 0., 0., 0., 0.])
 
     def test_cbow(self):
         cbow = Word2Vec(learning_rate=self.learning_rate)
