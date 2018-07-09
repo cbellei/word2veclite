@@ -46,11 +46,14 @@ def corpus2io(corpus_tokenized, V, window_size):
             center = []
             s = index - window_size
             e = index + window_size + 1
-            contexts.append([words[i]-1 for i in range(s, e) if 0 <= i < L and i != index])
+            contexts = contexts + [words[i]-1 for i in range(s, e) if 0 <= i < L and i != index]
             center.append(word-1)
+            # x has shape c x V where c is size of contexts
             x = np_utils.to_categorical(contexts, V)
+            # y has shape k x V where k is number of center words
             y = np_utils.to_categorical(center, V)
-            yield (np.matrix(x), np.matrix(y.ravel()))
+            yield (x, y)
+
 
 
 def softmax(x):

@@ -43,21 +43,34 @@ class Word2Vec:
         :param loss: float that represents the current value of the loss function
         :return: updated weights and loss
         """
-
-        x = np.mean(context, axis=0)
+        # context is 'x' from tokenizer, it is a c x V matrix
+        # label is 'y' from tokenizer, it is a 1 x V matrix
+        
+        x = np.matrix(np.mean(context, axis=0))
+        
+        # x is a 1 x V matrix
+        # W1 is a VxN matrix
+        # h is a N x 1 matrix
         h = np.matmul(W1.T, x.T)
+        
+        # u is a V x 1 matrix
         u = np.matmul(W2.T, h)
+        
+        # W2 is an N x V matrix
+        # y_pred is a V x 1 matrix
         y_pred = softmax(u)
-
+        # e is a V x 1 matrix
         e = -label.T + y_pred
-
+        # h is N x 1 and e is V x 1 so dW2 is N x V
         dW2 = np.outer(h, e)
-        dW1 = np.outer(x, np.dot(W2, e))
+        # x.T is a V x 1 matrix, W2e is a Nx1 so dW1 this is V x N
+        dW1 = np.outer(x.T, np.matmul(W2, e))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2
 
-        loss += -float(u.T[label == 1]) + np.log(np.sum(np.exp(u)))
+        # label is a 1xV matrix so label.T is a Vx1 matrix
+        loss += -float(u[label.T == 1]) + np.log(np.sum(np.exp(u)))
 
         return new_W1, new_W2, loss
 
@@ -71,14 +84,30 @@ class Word2Vec:
         :param loss: float that represents the current value of the loss function
         :return: updated weights and loss
         """
-
+        # context is "x" from tokenizer, it is a c x V matrix
+        # "x" is "y" from tokenizer, it is a 1 x V matrix
+        # W1 has dimension V x N (N= number of features, V = vocab size)
+        # x has dimension V x 1
         h = np.matmul(W1.T, x.T)
-        u = np.matmul(W2.T, h)
+        # h has dimension N x 1
+        # W2 has dimension N x V
+        # u has dimension V x 1
+        u = np.dot(W2.T, h)
+        # y_pred has dimension V x 1
         y_pred = softmax(u)
 
-        e = np.array([-label + y_pred.T for label in context][0])
-        dW2 = np.outer(h, np.sum(e, axis=0))
-        dW1 = np.outer(x, np.matmul(W2, np.sum(e, axis=0)))
+        # context is a c by V matrix
+        # e is a V x c matrix
+        e = np.outer(y_pred,np.array([1]*context.shape[0]))-context.T
+
+        # np.sum(e, axis=1) is a V x 1 vectors
+        # h is an N x 1 Vector
+        # dW2 is a N x V matrix
+        dW2 = np.outer(h, np.sum(e, axis=1))
+        # x is a V x 1 matrix
+        # np.dot(W2, np.sum(e,axis=1)) is a product (N x V) (Vx 1) is Nx1
+        # dW1 is an V x N matrix
+        dW1 = np.outer(x, np.dot(W2, np.sum(e, axis=1)))
 
         new_W1 = W1 - self.eta * dW1
         new_W2 = W2 - self.eta * dW2

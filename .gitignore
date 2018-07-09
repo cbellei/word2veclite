@@ -3,4 +3,5 @@ word2veclite.egg-info
 .idea
 __pycache__/
 *~
-\#*
+\#*\#
+.ipynb_checkpoints/
