@@ -1,10 +1,10 @@
 from word2veclite import Word2Vec
 
 corpus = "I like playing football with my friends"
-cbow = Word2Vec(method="skipgram", corpus=corpus,
+skipgram = Word2Vec(method="skipgram", corpus=corpus,
                 window_size=1, n_hidden=2,
-                n_epochs=10, learning_rate=0.8)
-W1, W2, loss_vs_epoch = cbow.run()
+                n_epochs=600, learning_rate=0.1)
+W1, W2, loss_vs_epoch = skipgram.run()
 
 print(W1)
 #[[ 0.99870389  0.20697257]
