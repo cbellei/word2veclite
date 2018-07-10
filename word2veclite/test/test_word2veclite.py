@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 from word2veclite.word2veclite import Word2Vec
 import numpy as np
@@ -17,7 +18,7 @@ class TestFunctions(TestCase):
 
     def test_cbow(self):
         cbow = Word2Vec(learning_rate=self.learning_rate)
-        W1_m, W2_m, loss_m = cbow.cbow(self.context_words, self.center_word, self.W1, self.W2, 0.)
+        W1_m, W2_m, loss_m = cbow.cbow(np.asmatrix(self.context_words), np.asmatrix(self.center_word), self.W1, self.W2, 0.)
 
         with tf.name_scope("cbow"):
             x = tf.placeholder(shape=[self.V, len(self.context_words)], dtype=tf.float32, name="x")
@@ -51,7 +52,7 @@ class TestFunctions(TestCase):
 
     def test_skipgram(self):
         skipgram = Word2Vec(learning_rate=self.learning_rate)
-        W1_m, W2_m, loss_m = skipgram.skipgram(self.context_words, self.center_word, self.W1, self.W2, 0.)
+        W1_m, W2_m, loss_m = skipgram.skipgram(np.asmatrix(self.context_words), np.asmatrix(self.center_word), self.W1, self.W2, 0.)
 
         with tf.name_scope("skipgram"):
             x = tf.placeholder(shape=[self.V, 1], dtype=tf.float32, name="x")
